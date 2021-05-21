@@ -3,15 +3,9 @@
 [![Release Package](https://github.com/eggplants/TextGenerator-cli/actions/workflows/release.yml/badge.svg)](https://github.com/eggplants/TextGenerator-cli/actions/workflows/release.yml) [![PyPI version](https://badge.fury.io/py/TextGenerator-cli.svg)](https://badge.fury.io/py/TextGenerator-cli)
 
 - マルコフ連鎖を使った文章自動生成プログラム(日本語のみ) + コマンドラインインターフェース
-- [ohshige15/TextGenerator](https://github.com/ohshige15/TextGenerator)の[Fork](https://github.com/karaage0703/TextGenerator)の[Fork](https://github.com/nkutomi/TextGenerator)のFork
+- [ohshige15/TextGenerator](https://github.com/ohshige15/TextGenerator)の[Fork](https://github.com/karaage0703/TextGenerator)の[Fork](https://github.com/nkutomi/TextGenerator)の Fork
 
 ## インストール
-
-- 注: 現在 PyPI の`mecab-python3`はエラー文がうるさいので以下のようにして`master HEAD`のものを導入するのがおすすめ
-
-```bash
-pip install git+https://github.com/SamuraiT/mecab-python3
-```
 
 ### 1. 事前に mecab をセットアップしておく
 

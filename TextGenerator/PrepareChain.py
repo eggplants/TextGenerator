@@ -4,10 +4,12 @@
 与えられた文書からマルコフ連鎖のためのチェーン（連鎖）を作成して、DBに保存するファイル
 '''
 
+import os
 import re
 import sqlite3
-import sys
+import subprocess
 from collections import defaultdict
+from shutil import which
 
 import MeCab
 
@@ -29,14 +31,30 @@ class PrepareChain(object):
         self.DB_PATH = DB_PATH
 
         # 形態素解析用タガー
-        try:
-            asdf = MeCab.Tagger('-Ochasen')
-        except RuntimeError as e:
-            print(type(e), 'change rc: /etc/mecabrc', file=sys.stderr)
-            asdf = MeCab.Tagger('-Ochasen -r /etc/mecabrc')
-
+        asdf = MeCab.Tagger('-Ochasen -r' + self.search_mecabrc())
         asdf.parse('')
         self.tagger = asdf
+
+    def search_mecabrc(self):
+        if which('mecab-config'):
+            p = subprocess.check_output(
+                ["mecab-config", "--sysconfdir"], shell=False
+            ).decode().rstrip()
+            return os.path.join(p, 'mecabrc')
+        else:
+            return self._search_mecabrc()
+
+    def _search_mecabrc(self):
+        if os.name == 'nt':
+            mecabrc = ('C:\\Program Files(x86)\\Mecab\\etc\\mecabrc',)
+        else:
+            mecabrc = ('/usr/local/etc/mecabrc', '/etc/mecabrc')
+
+        mecabrc = list(filter(os.path.isfile, mecabrc))
+        if len(mecabrc) == 1:
+            return mecabrc[0]
+        else:
+            return ('NUL' if os.name == 'nt' else '/dev/null')
 
     def make_triplet_freqs(self):
         '''
