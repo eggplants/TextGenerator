@@ -24,9 +24,21 @@ def command_prepare(args):
     chain.save(triplet_freqs, True)
 
 
+class TryLimitExceeded(Exception):
+    pass
+
+
 def command_generate(args):
-    generator = GenerateText.GenerateText(args.numline)
+    generator = GenerateText.GenerateText(args.num_line)
     gen_txt = generator.generate()
+    try_limit = args.try_limit
+    if type(args.length) is int:
+        while len(gen_txt.encode('utf-8')) > args.length:
+            if try_limit == 0:
+                raise TryLimitExceeded
+            gen_txt = generator.generate()
+            try_limit -= 1
+
     print(gen_txt)
 
 
@@ -71,8 +83,15 @@ def parse_args(test=None):
     parser_generate = subparsers.add_parser(
         'generate', help='文章を生成する', aliases=['g'])
     parser_generate.add_argument(
-        'numline', metavar='NL', nargs='?', default=1, type=check_positive,
-        help='生成する行数(>=0)')
+        '-n', '--num_line', metavar='NL', default=1,
+        type=check_positive, help='生成する文数(>=0)')
+    parser_generate.add_argument(
+        '-l', '--length', metavar='BYTE',
+        default=None, type=check_positive,
+        help='指定したbyte数以下のものが生成されるまで試行(>=0)')
+    parser_generate.add_argument(
+        '-t', '--try_limit', metavar='LIMIT', default=100,
+        type=check_positive, help='試行回数の上限(>=0)')
     parser_generate.set_defaults(handler=command_generate)
 
     parser_help = subparsers.add_parser(

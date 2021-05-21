@@ -4,6 +4,27 @@
 
 ## インストール
 
+### 1. 事前に mecab をセットアップしておく
+
+- Mac:
+
+```bash
+brew install mecab
+brew install mecab-ipadic
+```
+
+- Linux(Ubuntu):
+
+```bash
+sudo apt install mecab libmecab-dev mecab-ipadic-utf8 -y
+```
+
+- Windows:
+  - [3rd Party のインストーラ](https://github.com/ikegami-yukino/mecab/releases/tag/v0.996.2)でインストール
+  - 環境変数`Path`に`C:\Program Files\MeCab\bin`を追加
+
+### 2. `TextGenerator-cli`を PyPI からダウンロード
+
 ```bash
 pip install TextGenerator-cli
 ```
@@ -27,6 +48,30 @@ optional arguments:
   -V, --version         show program's version number and exit
 ```
 
+```bash
+$ textgen p -h
+usage: textgen prepare [-h] [FILE [FILE ...]]
+
+positional arguments:
+  FILE        テキストファイル(指定がなければstdin)
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+```bash
+$ textgen g -h
+usage: textgen generate [-h] [-n NL] [-l BYTE] [-t LIMIT]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -n NL, --num_line NL  生成する文数(>=0)
+  -l BYTE, --length BYTE
+                        指定したbyte数以下のものが生成されるまで試行(>=0)
+  -t LIMIT, --try_limit LIMIT
+                        試行回数の上限(>=0)
+```
+
 ## 使い方
 
 ```bash
@@ -34,7 +79,7 @@ optional arguments:
 $ curl 'http://pubserver2.herokuapp.com/api/v0.1/books/789/content?format=txt' -o wagahai.txt
 # モデル作成
 $ textgen p wagahai.txt
-# 文章の長さ10で生成
+# 文数2で生成
 $ textgen g 2
 従って人間らしい行動を二週間継続するなら白髪だって伝染しているかとの諺《ことわざ》になるそうだ面白いじゃありませんか、今戸焼の狸《たぬき》からしていいでしょう」漆桶《み》がある。
 ```

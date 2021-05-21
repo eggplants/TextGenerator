@@ -1,2 +1,2 @@
-git+https://github.com/SamuraiT/mecab-python3.git
+mecab-python3 @ git+https://github.com/SamuraiT/mecab-python3.git#egg=mecab-python3
 chardet
