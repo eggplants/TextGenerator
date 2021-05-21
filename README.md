@@ -7,6 +7,12 @@
 
 ## インストール
 
+- 注: 現在PyPIの`mecab-python3`はエラー文がうるさいので以下のようにして`master HEAD`のものを導入するのがおすすめ
+
+```bash
+pip install git+https://github.com/SamuraiT/mecab-python3
+```
+
 ### 1. 事前に mecab をセットアップしておく
 
 - Mac:
