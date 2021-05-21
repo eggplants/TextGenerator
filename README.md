@@ -3,11 +3,11 @@
 [![Release Package](https://github.com/eggplants/TextGenerator-cli/actions/workflows/release.yml/badge.svg)](https://github.com/eggplants/TextGenerator-cli/actions/workflows/release.yml) [![PyPI version](https://badge.fury.io/py/TextGenerator-cli.svg)](https://badge.fury.io/py/TextGenerator-cli)
 
 - マルコフ連鎖を使った文章自動生成プログラム(日本語のみ) + コマンドラインインターフェース
-- [ohshige15/TextGenerator](https://github.com/ohshige15/TextGenerator)の[Fork](https://github.com/karaage0703/TextGenerator)の[Fork](https://github.com/nkutomi/TextGenerator)の Fork
+- [ohshige15/TextGenerator](https://github.com/ohshige15/TextGenerator)の[Fork](https://github.com/karaage0703/TextGenerator)の[Fork](https://github.com/nkutomi/TextGenerator)のFork
 
 ## インストール
 
-- 注: 現在PyPIの`mecab-python3`はエラー文がうるさいので以下のようにして`master HEAD`のものを導入するのがおすすめ
+- 注: 現在 PyPI の`mecab-python3`はエラー文がうるさいので以下のようにして`master HEAD`のものを導入するのがおすすめ
 
 ```bash
 pip install git+https://github.com/SamuraiT/mecab-python3
@@ -55,30 +55,35 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -V, --version         show program's version number and exit
+
 ```
 
 ```bash
 $ textgen p -h
-usage: textgen prepare [-h] [FILE [FILE ...]]
+usage: textgen prepare [-h] [-o DB] [FILE [FILE ...]]
 
 positional arguments:
-  FILE        テキストファイル(指定がなければstdin)
+  FILE             テキストファイル (default: stdin)
 
 optional arguments:
-  -h, --help  show this help message and exit
+  -h, --help       show this help message and exit
+  -o DB, --out DB  出力DBファイル名 (default: chain.db)
+
 ```
 
 ```bash
 $ textgen g -h
-usage: textgen generate [-h] [-n NL] [-l BYTE] [-t LIMIT]
+usage: textgen generate [-h] [-s NL] [-b BYTE] [-n TIME] [-t LIMIT] [-d DB]
 
 optional arguments:
   -h, --help            show this help message and exit
-  -n NL, --num_line NL  生成する文数(>=0)
-  -l BYTE, --length BYTE
-                        指定したbyte数以下のものが生成されるまで試行(>=0)
+  -s NL, --sentence NL  生成する文数(>=0) (default: 5)
+  -b BYTE, --byte BYTE  指定byte数以下の文生成を試行(>=0) (default: None)
+  -n TIME, --time TIME  生成する回数(>=0) (default: 1)
   -t LIMIT, --try_limit LIMIT
-                        試行回数の上限(>=0)
+                        試行回数の上限(>=0) (default: 100)
+  -d DB, --db DB        チェインDBファイル (default: chain.db)
+
 ```
 
 ## 使い方
@@ -86,11 +91,13 @@ optional arguments:
 ```bash
 # 吾輩は猫であるを青空文庫からダウンロード
 $ curl 'http://pubserver2.herokuapp.com/api/v0.1/books/789/content?format=txt' -o wagahai.txt
-# モデル作成
+# モデル作成(chain.dbに出力する, -oで変更可能)
 $ textgen p wagahai.txt
-# 文数2で生成
-$ textgen g -n 2
-従って人間らしい行動を二週間継続するなら白髪だって伝染しているかとの諺《ことわざ》になるそうだ面白いじゃありませんか、今戸焼の狸《たぬき》からしていいでしょう」漆桶《み》がある。
+# 文章生成(chain.dbを入力とする, -dで変更可能)
+# -nで回数, -sで1回につなげる文の数を指定
+$ textgen g -n 2 -s 3
+忘れまいと思って、小供だの、いろいろ用事があっては近頃材料払底の為め、黒石を取っては黒を見て、図書館へは寄りつかない男だ」失敬な、下駄屋はいつ御催しがありました。「そうでございましょう」と考えて見たら分るでしょうから吹き付ける、非常に体育を重んじたものは自分の容貌《ようば》へ置く。
+この鏡を見ねえ。しかるにこのパラドックスを道破《どうは》えに眼窩《がんなべ》の声だけにしろと、烈しい光線で瞳孔《どうこう》の根本へ吹き寄せつつある。「質朴剛健でたのもしい気風だ」
 ```
 
 ## Fork 元

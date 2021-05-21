@@ -23,17 +23,17 @@ class GenerateText(object):
         """
         self.n = numb_sentence
 
-    def generate(self):
+    def generate(self, db='chain.db'):
         """
         実際に生成する
         @return 生成された文章
         """
         # DBが存在しないときは例外をあげる
-        if not os.path.exists(PrepareChain.DB_PATH):
+        if not os.path.exists(db):
             raise IOError("DBファイルが存在しません")
 
         # DBオープン
-        con = sqlite3.connect(PrepareChain.DB_PATH)
+        con = sqlite3.connect(db)
         con.row_factory = sqlite3.Row
 
         # 最終的にできる文章

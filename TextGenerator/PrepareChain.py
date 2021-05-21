@@ -19,14 +19,14 @@ class PrepareChain(object):
 
     BEGIN = '__BEGIN_SENTENCE__'
     END = '__END_SENTENCE__'
-    DB_PATH = 'chain.db'
 
-    def __init__(self, text):
+    def __init__(self, text, DB_PATH='chain.db'):
         '''
         初期化メソッド
         @param text チェーンを生成するための文章
         '''
         self.text = text
+        self.DB_PATH = DB_PATH
 
         # 形態素解析用タガー
         try:
@@ -113,11 +113,11 @@ class PrepareChain(object):
             triplet_freqs[triplet] += 1
 
         # beginを追加
-        triplet = (PrepareChain.BEGIN, morphemes[0], morphemes[1])
+        triplet = (self.BEGIN, morphemes[0], morphemes[1])
         triplet_freqs[triplet] = 1
 
         # endを追加
-        triplet = (morphemes[-2], morphemes[-1], PrepareChain.END)
+        triplet = (morphemes[-2], morphemes[-1], self.END)
         triplet_freqs[triplet] = 1
 
         return triplet_freqs
@@ -128,7 +128,7 @@ class PrepareChain(object):
         @param triplet_freqs 3つ組とその出現回数の辞書 key: 3つ組（タプル） val: 出現回数
         '''
         # DBオープン
-        con = sqlite3.connect(PrepareChain.DB_PATH)
+        con = sqlite3.connect(self.DB_PATH)
 
         # 初期化から始める場合
         if init:
