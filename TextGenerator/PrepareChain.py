@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-"""
+'''
 与えられた文書からマルコフ連鎖のためのチェーン（連鎖）を作成して、DBに保存するファイル
-"""
+'''
 
 import re
 import sqlite3
@@ -13,36 +13,36 @@ import MeCab
 
 
 class PrepareChain(object):
-    """
+    '''
     チェーンを作成してDBに保存するクラス
-    """
+    '''
 
-    BEGIN = "__BEGIN_SENTENCE__"
-    END = "__END_SENTENCE__"
-    DB_PATH = "chain.db"
+    BEGIN = '__BEGIN_SENTENCE__'
+    END = '__END_SENTENCE__'
+    DB_PATH = 'chain.db'
 
     def __init__(self, text):
-        """
+        '''
         初期化メソッド
         @param text チェーンを生成するための文章
-        """
+        '''
         self.text = text
 
         # 形態素解析用タガー
         try:
             asdf = MeCab.Tagger('-Ochasen')
         except RuntimeError as e:
-            print(type(e), "change rc: /etc/mecabrc", file=sys.stderr)
+            print(type(e), 'change rc: /etc/mecabrc', file=sys.stderr)
             asdf = MeCab.Tagger('-Ochasen -r /etc/mecabrc')
 
-        asdf.parse("")
+        asdf.parse('')
         self.tagger = asdf
 
     def make_triplet_freqs(self):
-        """
+        '''
         形態素解析から3つ組の出現回数まで
         @return 3つ組とその出現回数の辞書 key: 3つ組（タプル） val: 出現回数
-        """
+        '''
         # 長い文章をセンテンス毎に分割
         sentences = self._divide(self.text)
 
@@ -62,14 +62,14 @@ class PrepareChain(object):
         return triplet_freqs
 
     def _divide(self, text):
-        """
+        '''
         「。」や改行などで区切られた長い文章を一文ずつに分ける
         @param text 分割前の文章
         @return 一文ずつの配列
-        """
+        '''
 
         # 全ての分割文字を改行文字に置換（splitしたときに「。」などの情報を無くさないため）
-        text = re.sub(r"(。|\.|．)", r"\1\n", text)
+        text = re.sub(r'(。|\.|．)', r'\1\n', text)
 
         # 改行文字で分割
         sentences = text.splitlines()
@@ -80,11 +80,11 @@ class PrepareChain(object):
         return sentences
 
     def _morphological_analysis(self, sentence):
-        """
+        '''
         一文を形態素解析する
         @param sentence 一文
         @return 形態素で分割された配列
-        """
+        '''
         morphemes = []
         node = self.tagger.parseToNode(sentence)
         while node:
@@ -95,11 +95,11 @@ class PrepareChain(object):
         return morphemes
 
     def _make_triplet(self, morphemes):
-        """
+        '''
         形態素解析で分割された配列を、形態素毎に3つ組にしてその出現回数を数える
         @param morphemes 形態素配列
         @return 3つ組とその出現回数の辞書 key: 3つ組（タプル） val: 出現回数
-        """
+        '''
         # 3つ組をつくれない場合は終える
         if len(morphemes) < 3:
             return {}
@@ -123,23 +123,23 @@ class PrepareChain(object):
         return triplet_freqs
 
     def save(self, triplet_freqs, init=False):
-        """
+        '''
         3つ組毎に出現回数をDBに保存
         @param triplet_freqs 3つ組とその出現回数の辞書 key: 3つ組（タプル） val: 出現回数
-        """
+        '''
         # DBオープン
         con = sqlite3.connect(PrepareChain.DB_PATH)
 
         # 初期化から始める場合
         if init:
             # DBの初期化
-            schema = "drop table if exists chain_freqs;"\
-                     "create table chain_freqs ("\
-                     "id integer primary key autoincrement not null,"\
-                     "prefix1 text not null,"\
-                     "prefix2 text not null,"\
-                     "suffix text not null,"\
-                     "freq integer not null);"
+            schema = 'drop table if exists chain_freqs;'\
+                     'create table chain_freqs ('\
+                     'id integer primary key autoincrement not null,'\
+                     'prefix1 text not null,'\
+                     'prefix2 text not null,'\
+                     'suffix text not null,'\
+                     'freq integer not null);'
             con.executescript(schema)
 
             # データ整形
@@ -147,8 +147,8 @@ class PrepareChain(object):
                      for (triplet, freq) in list(triplet_freqs.items())]
 
             # データ挿入
-            p_statement = "insert into chain_freqs"\
-                " (prefix1, prefix2, suffix, freq) values (?, ?, ?, ?)"
+            p_statement = 'insert into chain_freqs'\
+                ' (prefix1, prefix2, suffix, freq) values (?, ?, ?, ?)'
             con.executemany(p_statement, datas)
 
         # コミットしてクローズ
@@ -156,16 +156,16 @@ class PrepareChain(object):
         con.close()
 
     def show(self, triplet_freqs):
-        """
+        '''
         3つ組毎の出現回数を出力する
         @param triplet_freqs 3つ組とその出現回数の辞書 key: 3つ組（タプル） val: 出現回数
-        """
+        '''
         for triplet in triplet_freqs:
-            print("|".join(triplet), "\t", triplet_freqs[triplet])
+            print('|'.join(triplet), '\t', triplet_freqs[triplet])
 
 
 def main(file=0):
-    text = open(file, encoding="utf-8_sig").read()
+    text = open(file, encoding='utf-8_sig').read()
     chain = PrepareChain(text)
     triplet_freqs = chain.make_triplet_freqs()
     chain.save(triplet_freqs, True)

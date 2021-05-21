@@ -4,7 +4,6 @@
 import argparse
 import codecs
 import os
-import textwrap
 
 import chardet
 
@@ -19,7 +18,7 @@ def command_prepare(args):
         t = b.decode(enc).replace('\r', '')
         text.append(t)
 
-    chain = PrepareChain.PrepareChain("\n".join(text))
+    chain = PrepareChain.PrepareChain('\n'.join(text))
     triplet_freqs = chain.make_triplet_freqs()
     chain.save(triplet_freqs, True)
 
@@ -49,7 +48,7 @@ def command_help(args):
 def check_positive(v):
     if int(v) <= 0:
         raise argparse.ArgumentTypeError(
-            "%s is an invalid natural number" % int(v))
+            '%s is an invalid natural number' % int(v))
     return int(v)
 
 
@@ -57,18 +56,17 @@ def check_file(v):
     v = os.path.abspath(str(v))
     if not os.path.isfile(v):
         raise argparse.ArgumentTypeError(
-            "%s is not file" % v)
+            '%s is not file' % v)
     return codecs.open(v, 'rb')
 
 
 def parse_args(test=None):
-    """Parse arguments."""
+    '''Parse arguments.'''
     global parser
     parser = argparse.ArgumentParser(
         prog='textgen',
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=textwrap.dedent('''\
-            マルコフ連鎖を使った文章自動生成プログラム'''))
+        description='マルコフ連鎖を使った文章自動生成プログラム')
 
     subparsers = parser.add_subparsers()
 
@@ -76,7 +74,7 @@ def parse_args(test=None):
         'prepare', help='モデルをテキストから作成(chain.db)', aliases=['p'])
     parser_prepare.add_argument(
         'file', metavar='FILE', nargs='*', type=check_file,
-        default=[open(0, "rb")],
+        default=[open(0, 'rb')],
         help='テキストファイル(指定がなければstdin)')
     parser_prepare.set_defaults(handler=command_prepare)
 

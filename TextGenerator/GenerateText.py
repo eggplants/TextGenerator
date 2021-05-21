@@ -16,9 +16,7 @@ class GenerateText(object):
     文章生成用クラス
     """
 
-    # def __init__(self, n=10):
     def __init__(self, numb_sentence=5):
-        # print ("sentence_numb=" + str(numb_sentence))
         """
         初期化メソッド
         @param n いくつの文章を生成するか
