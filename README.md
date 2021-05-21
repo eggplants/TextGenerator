@@ -1,8 +1,9 @@
-# Text Generator
+# Text Generator CLI
 
 [![Release Package](https://github.com/eggplants/TextGenerator-cli/actions/workflows/release.yml/badge.svg)](https://github.com/eggplants/TextGenerator-cli/actions/workflows/release.yml) [![PyPI version](https://badge.fury.io/py/TextGenerator-cli.svg)](https://badge.fury.io/py/TextGenerator-cli)
 
-マルコフ連鎖を使った文章自動生成プログラム(日本語のみ)
+- マルコフ連鎖を使った文章自動生成プログラム(日本語のみ) + コマンドラインインターフェース
+- [ohshige15/TextGenerator](https://github.com/ohshige15/TextGenerator)の[Fork](https://github.com/karaage0703/TextGenerator)の[Fork](https://github.com/nkutomi/TextGenerator)の Fork
 
 ## インストール
 
@@ -82,7 +83,7 @@ $ curl 'http://pubserver2.herokuapp.com/api/v0.1/books/789/content?format=txt' -
 # モデル作成
 $ textgen p wagahai.txt
 # 文数2で生成
-$ textgen g 2
+$ textgen g -n 2
 従って人間らしい行動を二週間継続するなら白髪だって伝染しているかとの諺《ことわざ》になるそうだ面白いじゃありませんか、今戸焼の狸《たぬき》からしていいでしょう」漆桶《み》がある。
 ```
 
