@@ -15,7 +15,10 @@ setup(
     python_requires='>=3.5',
     include_package_data=True,
     license='MIT',
-    install_requires=open('requirements.txt').read().splitlines(),
+    install_requires=[
+        'mecab-python3 @ '
+        'git+https://github.com/SamuraiT/mecab-python3.git#egg=mecab-python3',
+        'chardet'],
     entry_points={
         'console_scripts': [
             'textgen=TextGenerator.main:main'
