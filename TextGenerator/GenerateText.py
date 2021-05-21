@@ -5,13 +5,11 @@
 """
 
 import os.path
-import sqlite3
 import random
-import sys
+import sqlite3
 
-from PrepareChain import PrepareChain
+from .PrepareChain import PrepareChain
 
-numb_sentence = 5
 
 class GenerateText(object):
     """
@@ -19,7 +17,7 @@ class GenerateText(object):
     """
 
     # def __init__(self, n=10):
-    def __init__(self):
+    def __init__(self, numb_sentence=5):
         # print ("sentence_numb=" + str(numb_sentence))
         """
         初期化メソッド
@@ -87,7 +85,8 @@ class GenerateText(object):
         @return チェーンの情報の配列
         """
         # ベースとなるSQL
-        sql = "select prefix1, prefix2, suffix, freq from chain_freqs where prefix1 = ?"
+        sql = "select prefix1, prefix2, suffix, freq"\
+            " from chain_freqs where prefix1 = ?"
 
         # prefixが2つなら条件に加える
         if len(prefixes) == 2:
@@ -159,14 +158,11 @@ class GenerateText(object):
         return chains[chain_index]
 
 
-if __name__ == '__main__':
-    param = sys.argv
-    if (len(param) != 2):
-        print(("Usage: $ python " + param[0] + " number"))
-        quit()  
-
-    numb_sentence = int(param[1])
-
-    generator = GenerateText()
+def main(num):
+    generator = GenerateText(num)
     gen_txt = generator.generate()
-    print((gen_txt))#.encode('utf_8'))) 
+    print(gen_txt)
+
+
+if __name__ == '__main__':
+    main(5)
