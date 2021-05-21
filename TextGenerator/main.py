@@ -15,7 +15,7 @@ def command_prepare(args):
     for f in args.file:
         b = f.read()
         enc = chardet.detect(b)['encoding']
-        t = b.decode(enc).replace('\r', '')
+        t = b.decode('utf-8' if enc is None else enc).replace('\r', '')
         text.append(t)
 
     chain = PrepareChain.PrepareChain('\n'.join(text))
