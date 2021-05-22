@@ -36,15 +36,22 @@ class PrepareChain(object):
         self.tagger = asdf
 
     def search_mecabrc(self):
+        '''
+        mecabrcの探索
+        @return mecabrcのパス
+        '''
         if which('mecab-config'):
-            p = subprocess.check_output(
-                ["mecab-config", "--sysconfdir"], shell=False
-            ).decode().rstrip()
-            return os.path.join(p, 'mecabrc')
+            cmd = ['mecab-config', '--sysconfdir']
+            exe = subprocess.check_output(cmd, shell=False)
+            return os.path.join(exe.decode().rstrip(), 'mecabrc')
         else:
             return self._search_mecabrc()
 
     def _search_mecabrc(self):
+        '''
+        mecabrcの探索ヘルパ
+        @return mecabrcのパス
+        '''
         if os.name == 'nt':
             mecabrc = ('C:\\Program Files(x86)\\Mecab\\etc\\mecabrc',)
         else:
