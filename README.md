@@ -36,47 +36,59 @@ pip install TextGenerator-cli
 
 ```bash
 $ textgen
-usage: textgen [-h] [-V] {prepare,p,generate,g,help,h} ...
+usage: textgen [-V] [-h] {prepare,p,generate,g,help,h} ...
 
 マルコフ連鎖を使った文章自動生成プログラム
 
 positional arguments:
   {prepare,p,generate,g,help,h}
-    prepare (p)         モデルをテキストから作成(chain.db)
+    prepare (p)         モデルをテキストから作成する
     generate (g)        文章を生成する
     help (h)            ヘルプを表示する
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -V, --version         show program's version number and exit
+  -V, --version         バージョン情報を表示する
+  -h, --help            ヘルプを表示する
+
 
 ```
 
 ```bash
-$ textgen p -h
-usage: textgen prepare [-h] [-o DB] [FILE [FILE ...]]
+$ textgen help p
+usage: textgen prepare [-o DB] [-h] [FILE [FILE ...]]
 
 positional arguments:
   FILE             テキストファイル (default: stdin)
 
 optional arguments:
-  -h, --help       show this help message and exit
   -o DB, --out DB  出力DBファイル名 (default: chain.db)
+  -h, --help       ヘルプを表示する
 
 ```
 
 ```bash
-$ textgen g -h
-usage: textgen generate [-h] [-s NL] [-b BYTE] [-n TIME] [-t LIMIT] [-d DB]
+$ textgen help g
+usage: textgen generate [-s NL] [-b BYTE] [-n TIME] [-t LIM] [-d DB] [-h]
 
 optional arguments:
-  -h, --help            show this help message and exit
   -s NL, --sentence NL  生成する文数(>=0) (default: 5)
   -b BYTE, --byte BYTE  指定byte数以下の文生成を試行(>=0) (default: None)
   -n TIME, --time TIME  生成する回数(>=0) (default: 1)
-  -t LIMIT, --try_limit LIMIT
-                        試行回数の上限(>=0) (default: 100)
+  -t LIM, --try LIM     試行回数の上限(>=0) (default: 100)
   -d DB, --db DB        チェインDBファイル (default: chain.db)
+  -h, --help            ヘルプを表示する
+
+```
+
+```bash
+$ textgen help h
+usage: textgen help [-h] command
+
+positional arguments:
+  command     ヘルプが表示されるコマンド名
+
+optional arguments:
+  -h, --help  ヘルプを表示する
 
 ```
 

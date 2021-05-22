@@ -29,7 +29,7 @@ class TryLimitExceeded(Exception):
 
 def _generate(generator, args):
     gen_txt = generator.generate(args.db)
-    try_limit = args.try_limit
+    try_limit = vars(args)['try']
     if type(args.byte) is int:
         while len(gen_txt.encode('utf-8')) > args.length:
             if try_limit == 0:
@@ -75,16 +75,27 @@ def check_dbfile(v):
 
 def parse_args(test=None):
     '''Parse arguments.'''
+
+    # main parser
     global parser
     parser = argparse.ArgumentParser(
-        prog='textgen',
+        prog='textgen', add_help=False,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description='マルコフ連鎖を使った文章自動生成プログラム')
+    parser.add_argument('-V', '--version', action='version',
+                        version='%(prog)s {}'.format(__version__),
+                        help='バージョン情報を表示する')
+    parser.add_argument(
+        '-h', '--help', action='help',
+        default=argparse.SUPPRESS, help='ヘルプを表示する')
 
+    # sub parser
     subparsers = parser.add_subparsers()
 
+    # prepare command
     parser_prepare = subparsers.add_parser(
-        'prepare', help='モデルをテキストから作成(chain.db)', aliases=['p'])
+        'prepare', aliases=['p'], add_help=False,
+        help='モデルをテキストから作成する')
     parser_prepare.add_argument(
         'file', metavar='FILE', nargs='*', type=check_file,
         default=[open(0, 'rb')],
@@ -93,10 +104,15 @@ def parse_args(test=None):
         '-o', '--out', metavar='DB', type=str,
         default='chain.db',
         help='出力DBファイル名 (default: %(default)s)')
+    parser_prepare.add_argument(
+        '-h', '--help', action='help',
+        default=argparse.SUPPRESS, help='ヘルプを表示する')
     parser_prepare.set_defaults(handler=command_prepare)
 
+    # generate command
     parser_generate = subparsers.add_parser(
         'generate', help='文章を生成する', aliases=['g'],
+        add_help=False,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser_generate.add_argument(
         '-s', '--sentence', metavar='NL', default=5,
@@ -109,22 +125,26 @@ def parse_args(test=None):
         '-n', '--time', metavar='TIME', default=1,
         type=check_positive, help='生成する回数(>=0)')
     parser_generate.add_argument(
-        '-t', '--try_limit', metavar='LIMIT', default=100,
+        '-t', '--try', metavar='LIM', default=100,
         type=check_positive, help='試行回数の上限(>=0)')
     parser_generate.add_argument(
         '-d', '--db', metavar='DB', type=check_dbfile,
         default='chain.db',
         help='チェインDBファイル')
+    parser_generate.add_argument(
+        '-h', '--help', action='help',
+        default=argparse.SUPPRESS, help='ヘルプを表示する')
     parser_generate.set_defaults(handler=command_generate)
 
+    # help command
     parser_help = subparsers.add_parser(
-        'help', help='ヘルプを表示する', aliases=['h'])
+        'help', aliases=['h'], add_help=False, help='ヘルプを表示する')
     parser_help.add_argument(
         'command', help='ヘルプが表示されるコマンド名')
+    parser_help.add_argument(
+        '-h', '--help', action='help',
+        default=argparse.SUPPRESS, help='ヘルプを表示する')
     parser_help.set_defaults(handler=command_help)
-
-    parser.add_argument('-V', '--version', action='version',
-                        version='%(prog)s {}'.format(__version__))
 
     if test:
         return parser.parse_args(test)
