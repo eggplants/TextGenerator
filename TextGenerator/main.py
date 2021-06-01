@@ -31,7 +31,7 @@ def _generate(generator, args):
     gen_txt = generator.generate(args.db)
     try_limit = vars(args)['try']
     if type(args.byte) is int:
-        while len(gen_txt.encode('utf-8')) > args.length:
+        while len(gen_txt.encode('utf-8')) > args.byte:
             if try_limit == 0:
                 raise TryLimitExceeded
             gen_txt = generator.generate()
